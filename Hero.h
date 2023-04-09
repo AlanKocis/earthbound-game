@@ -14,6 +14,7 @@ private:
 
 
 public:
+	void takeDMG();
 	void create_health_bar(int size, float vertices[]);
 	float* get_health_bar_vertices();
 	unsigned int* get_health_bar_indices();

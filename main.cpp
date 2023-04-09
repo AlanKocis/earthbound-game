@@ -6,7 +6,13 @@
 #include <cmath>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
 void processInput(GLFWwindow* window);
+void takeDamage();
+
+Hero player(25, 25);
+
 
 int main() {
 // openGL boilerplate
@@ -22,7 +28,6 @@ int main() {
 		return -1;
 	}
 	glfwMakeContextCurrent(window);
-	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		std::cout << "Failed to initialize GLAD" << std::endl;
@@ -31,9 +36,12 @@ int main() {
 //END boilerplate
 
 
+	// callbacks
+	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
+
 	//Creating the player object
 
-	Hero player(0, 25);
 	float playerHealthBarVertices[] = {
 	   -0.5f, -0.7f, 0.0f,		//bottom left
 	   -0.5f, -0.6f, 0.0f,		//top left
@@ -75,16 +83,17 @@ int main() {
 	float percentHealth;
 
 	while (!glfwWindowShouldClose(window)) {
-		// calculations necessary for rendering
-		percentHealth = ((float)player.get_health() / player.get_max_health());
-		stopPosition = -0.5f + (1.0f * percentHealth);
-
 		// process input
 		processInput(window);
 
-		// color
+
+		// background color
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+		// calculations necessary for rendering
+		percentHealth = ((float)player.get_health() / player.get_max_health());
+		stopPosition = -0.5f + (1.0f * percentHealth);
 
 		// render player healthbar
 		healthBarShader.use();
@@ -107,8 +116,23 @@ int main() {
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
 }
+
 void processInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+
+
+
+
+}
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
+		takeDamage();
+}
+
+void takeDamage() {
+	player.takeDMG();
 }

@@ -2,7 +2,9 @@
 #include <cmath>
 #include <iostream>
 
-
+void Hero::takeDMG() {
+	health -= 1;
+}
 
 Hero::Hero(int currHP, int maxHP)
 	: name{ "Player" }, health{ currHP }, max_health{ maxHP }, level{ 1 }, xp{ 0 }, xp_to_lvl{ 10 } {
