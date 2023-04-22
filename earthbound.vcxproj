@@ -135,12 +135,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\..\OpenGL\glad.c" />
+    <ClCompile Include="Enemy.cpp" />
+    <ClCompile Include="GameEngine.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="Hero.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Shader.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Enemy.h" />
+    <ClInclude Include="GameEngine.h" />
     <ClInclude Include="HealthBar.h" />
     <ClInclude Include="Hero.h" />
     <ClInclude Include="Shader.h" />
