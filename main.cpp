@@ -59,8 +59,16 @@ int main() {
 		0.5f, -0.6f, 0.0f		//top right
 	};
 
-	player.create_health_bar(sizeof(playerHealthBarVertices) / sizeof(float), playerHealthBarVertices);
+	unsigned int playerHealthBarIndices[6] = {
+		0, 1, 3,
+		3, 2, 0
+	};
 
+	size_t phbVSize, phbISize;
+	phbVSize = sizeof(playerHealthBarVertices) / sizeof(float);
+	phbISize = sizeof(playerHealthBarIndices) / sizeof(unsigned int);
+											//size                            //vertice array
+	player.create_health_bar(phbVSize, playerHealthBarVertices, phbISize, playerHealthBarIndices);
 
 
 
@@ -153,7 +161,7 @@ void gameStateCallBack(GLFWwindow* window) {
 		std::vector<Enemy*>enemies;
 
 		for (int i = 0; i < engine.rollNumEnemies(); i++) {
-			enemies.push_back;
+			//enemies.push_back;
 		}
 
 

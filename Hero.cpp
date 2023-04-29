@@ -11,8 +11,9 @@ Hero::Hero(int currHP, int maxHP)
 
 }
 
-void Hero::create_health_bar(int size, float vertices[]) {
-	healthBar.create_vertices( size, vertices);
+void Hero::create_health_bar(size_t vSize, const float vertices[], size_t iSize, const unsigned int indices[]) {
+	healthBar.create_vertices(vSize, vertices);
+	healthBar.create_indices(iSize, indices);
 }
 
 void Hero::print() {

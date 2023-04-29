@@ -4,12 +4,10 @@ class HealthBar
 private:
 	float* vertices;
 	float percentHealth;
-	unsigned int indices[6] = {
-		0, 1, 3,
-		3, 2, 0
-	};
+	unsigned int* indices;
 public:
-	void create_vertices(int vertices_size, float verticesArr[]);
+	void create_vertices(size_t vertices_size, const float* verticesArr);
+	void create_indices(size_t indices_size, const unsigned int* indicesArr);
 	unsigned int* get_indices();
 	float* get_vertices();
 	HealthBar();
