@@ -1,11 +1,16 @@
-#include <glad/glad.h>
+#include "renderer.h"			//renderer.h must be included first since glad.h within it must be included first
 #include <GLFW/glfw3.h>
-#include <vector>
+
+#include "VAO.h"
+#include "VBO.h"
+#include "VAO.h"
 #include "Shader.h"
 #include "Hero.h"
 #include "GameEngine.h"
 #include <cmath>
 #include "Enemy.h"
+
+#include <vector>
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -71,8 +76,6 @@ int main() {
 	player.create_health_bar(phbVSize, playerHealthBarVertices, phbISize, playerHealthBarIndices);
 
 
-
-
 	unsigned int playerHealthVBO, playerHealthVAO, playerHealthEBO;
 	glGenVertexArrays(1, &playerHealthVAO);
 	glGenBuffers(1, &playerHealthVBO);
@@ -86,7 +89,7 @@ int main() {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, playerHealthEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), player.get_health_bar_indices(), GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);			//accesses whatever is bound by glBindVertexArray, glBindBuffer(GL_ARRAY_BUFFER,...) and glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ...)
 	glEnableVertexAttribArray(0);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
