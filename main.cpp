@@ -157,7 +157,7 @@ void takeDamage() {
 }
 
 void gameStateCallBack(GLFWwindow* window) {
-	if (engine.getGameState() == 0) {
+	if (engine.getGameState() == NEW_COMBAT) {
 		std::vector<Enemy*>enemies;
 
 		for (int i = 0; i < engine.rollNumEnemies(); i++) {
@@ -166,15 +166,15 @@ void gameStateCallBack(GLFWwindow* window) {
 
 
 	}
-	else if (engine.getGameState() == 1) {
+	else if (engine.getGameState() == IN_COMBAT) {
 		// roll enemy action
 	}
-	else if (engine.getGameState() == 2) {
+	else if (engine.getGameState() == WON_COMBAT) {
 		// won combat - get rid of the enemy stuff - delete pointer to new etc
 		// play animation?
 
 	}
-	else if (engine.getGameState() == 3) {
+	else if (engine.getGameState() == DEAD) {
 		//you died
 		glfwSetWindowShouldClose(window, true);
 	}
