@@ -4,6 +4,7 @@
 #include "VAO.h"
 #include "VBO.h"
 #include "VAO.h"
+#include "EBO.h"
 #include "Shader.h"
 #include "Hero.h"
 #include "GameEngine.h"
@@ -76,6 +77,13 @@ int main() {
 	player.create_health_bar(phbVSize, playerHealthBarVertices, phbISize, playerHealthBarIndices);
 
 
+	
+	/*VAO pHealthBarVertexArray;
+	pHealthBarVertexArray.Bind();
+	VBO pHealthBarVertexBuffer(player.get_health_bar_vertices(), sizeof(float) * 12);
+	EBO pHealthBarIndexBuffer(player.get_health_bar_indices(), sizeof(unsigned int) * 6);
+	pHealthBarVertexArray.addBuffers(pHealthBarVertexBuffer, pHealthBarIndexBuffer, 0, 3, 3, 0);*/
+
 	unsigned int playerHealthVBO, playerHealthVAO, playerHealthEBO;
 	glGenVertexArrays(1, &playerHealthVAO);
 	glGenBuffers(1, &playerHealthVBO);
@@ -98,7 +106,9 @@ int main() {
 	Shader healthBarShader("3.3.healthbarshader.vs", "3.3.healthbarshader.fs");
 	int stopPosLocation = glGetUniformLocation(healthBarShader.ID, "stopPos");
 
-	std::cout << player.get_health() << " " << player.get_max_health();
+	std::cout << player.get_health() << " " << player.get_max_health() << std::endl;
+	std::cout << sizeof(player.get_health_bar_vertices()) << std::endl;
+	std::cout << sizeof(float) * 12 << ' ' << sizeof(playerHealthBarVertices);
 
 	float stopPosition;
 	float percentHealth;
