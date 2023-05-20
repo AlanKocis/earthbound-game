@@ -1,10 +1,7 @@
-#include "renderer.h"			//renderer.h must be included first since glad.h within it must be included first
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "VAO.h"
-#include "VBO.h"
-#include "VAO.h"
-#include "EBO.h"
+
 #include "Shader.h"
 #include "Hero.h"
 #include "GameEngine.h"
