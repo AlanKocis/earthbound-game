@@ -5,17 +5,22 @@
 int GameEngine::rollNumEnemies() {
 	srand(time(NULL));
 
-	if (firstEncounter != 1) {
+	// first encounter should only have 1 enemy
+	if (firstEncounter == false) {
 		return (rand() % 3 + 1);		//random 1 to 3
 	}
 	else {
-		firstEncounter = 0;
+		firstEncounter = false;
 		return 1;
 	}
 }
 
 int GameEngine::getGameState() {
 	return gameState;
+}
+
+void GameEngine::setGameState(int n) {
+	gameState = n;
 }
 
 GameEngine::GameEngine()
