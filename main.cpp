@@ -99,46 +99,71 @@ int main() {
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-// Enemy objects
+// 
+// Enemy objects and textures
+//
 
 	float enemy1Vertices[] = {
-		//vertex            //texture
-		-0.1f, 0.0f, 0.0f,		0.0f, 0.0f,		// bottom left
-		 0.1f, 0.0f, 0.0f,		1.0f, 0.0f,		// bottom right
-		-0.1f, 0.5f, 0.0f,		0.0f, 1.0f,		//top left
-		 0.1f, 0.5f, 0.0f,		1.0f, 1.0f		//top right		
+		//vertex				//texture
+		 0.25f, 0.7f, 0.0f,		1.0f, 1.0f,			//top right
+		 0.25f, -0.2f, 0.0f,		1.0f, 0.0f,			//bottom right
+		-0.25f, -0.2f, 0.0f,		0.0f, 0.0f,			//bottom left
+		-0.25f, 0.7f, 0.0f,		0.0f, 1.0f,			//top left
 	};
 
 	unsigned int enemyIndices[] = {
 		0, 1, 3,
-		3, 2, 0
+		1, 2, 3
 	};
 
-	unsigned int enemy1VBO, enemy2VBO, enemy3VBO;
-	unsigned int enemy1VAO, enemy2VAO, enemy3VAO;
-	unsigned int enemyEBO;
 
-	glGenVertexArrays(1, &enemy1VAO);
-	glGenBuffers(1, &enemy1VBO);
-	glGenBuffers(1, &enemyEBO);
+	unsigned int monsterVAO1, monsterVBO1, monsterEBO;
+	glGenVertexArrays(1, &monsterVAO1);
+	glGenBuffers(1, &monsterVBO1);
+	glGenBuffers(1, &monsterEBO);
+	
+	glBindVertexArray(monsterVAO1);
 
-	glBindVertexArray(enemy1VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, enemy1VBO);
-	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), enemy1Vertices, GL_STATIC_DRAW);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, enemyEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), enemyIndices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, monsterVBO1);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(enemy1Vertices), enemy1Vertices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, monsterEBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(enemyIndices), enemyIndices, GL_STATIC_DRAW);
+
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
 	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-	// Shaders
+	unsigned int monsterTex1;
+	glGenTextures(1, &monsterTex1);
+	glBindTexture(GL_TEXTURE_2D, monsterTex1);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	int imgW, imgH, nrChannels;
+	stbi_set_flip_vertically_on_load(true);
+	unsigned char* data = stbi_load("starman.png", &imgW, &imgH, &nrChannels, 0);
+	if (data)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imgW, imgH, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+		//glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+	{
+		std::cout << "Failed to load texture" << std::endl;
+	}
+	stbi_image_free(data);
+	
+
+// Shaders
 	Shader healthBarShader("3.3.healthbarshader.vs", "3.3.healthbarshader.fs");
 	int stopPosLocation = glGetUniformLocation(healthBarShader.ID, "stopPos");
 
-	Shader enemyShader("3.3.enemy1shader.vs", "3.3.enemy1shader.fs");
+	Shader starmanShader("3.3.enemy1shader.vs", "3.3.enemy1shader.fs");
 
 	std::cout << player.get_health() << " " << player.get_max_health() << std::endl;
 	std::cout << sizeof(player.get_health_bar_vertices()) << std::endl;
@@ -149,25 +174,7 @@ int main() {
 
 
 
-	// Textures
-	unsigned int enemy1Texture;
-	glGenTextures(1, &enemy1Texture);
-	glBindTexture(GL_TEXTURE_2D, enemy1Texture);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	int width, height, nrChannels;
-	unsigned char* data = stbi_load("starman.png", &width, &height, &nrChannels, 0);
-
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-	}
-	else {
-		std::cout << "Failed to load texture" << std::endl;
-	}
-	stbi_image_free(data);
 
 
 
@@ -199,9 +206,10 @@ int main() {
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		
 		//render enemies
-		enemyShader.use();
-		glBindTexture(GL_TEXTURE_2D, enemy1Texture);
-		glBindVertexArray(enemy1VAO);
+		//glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, monsterTex1);
+		starmanShader.use();
+		glBindVertexArray(monsterVAO1);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
