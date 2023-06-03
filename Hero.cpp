@@ -23,7 +23,7 @@ void Hero::print() {
 	}
 }
 
-int Hero::attack() {
+int Hero::attack(Hero* target) {
 	int atk;
 	unsigned seed = time(0);
 	srand(seed);
@@ -62,6 +62,16 @@ void Hero::add_xp(int xp_val) {
 	else {
 		xp += xp_val;
 	}
+}
+
+void Hero::set_myTurn(bool n)
+{
+	myTurn = n;
+}
+
+bool Hero::get_myTurn()
+{
+	return myTurn;
 }
 
 float* Hero::get_health_bar_vertices() {

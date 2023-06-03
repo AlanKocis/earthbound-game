@@ -24,5 +24,9 @@ void GameEngine::setGameState(int n) {
 }
 
 GameEngine::GameEngine()
-	: gameState{ 0 }, firstEncounter{ 1 } {}
+	: gameState{ 0 }, firstEncounter{ 1 }, currMobs{nullptr, nullptr, nullptr} {}
 
+Hero** GameEngine::get_currMobs_head()
+{
+	return currMobs;
+}

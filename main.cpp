@@ -22,7 +22,7 @@ void gameStateCallBack(GLFWwindow* window);
 GameEngine engine;
 Hero player(25, 25);
 bool menuIsOpen;
-std::vector<Enemy*>enemies;
+
 
 #define NEW_COMBAT 0
 #define IN_COMBAT 1
@@ -33,6 +33,22 @@ std::vector<Enemy*>enemies;
 #define ENEMY_TURN 1;
 
 int main() {
+
+	*(engine.get_currMobs_head() + 1) = &player;
+
+	engine.setGameState(NEW_COMBAT);
+
+
+
+
+
+
+
+
+
+
+
+
 // openGL boilerplate
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -51,9 +67,7 @@ int main() {
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	glEnable(GL_BLEND);
 
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 //END boilerplate
 
 
@@ -105,6 +119,7 @@ int main() {
 // 
 // Enemy objects and textures
 //
+// 
 
 	float enemy1Vertices[] = {
 		//vertex				//texture
@@ -120,14 +135,16 @@ int main() {
 	};
 
 
+
+	unsigned int VAOs[3], VBOs[3];
 	unsigned int monsterVAO1, monsterVBO1, monsterEBO;
-	glGenVertexArrays(1, &monsterVAO1);
-	glGenBuffers(1, &monsterVBO1);
+	glGenVertexArrays(3, VAOs);
+	glGenBuffers(3, VBOs);
 	glGenBuffers(1, &monsterEBO);
 	
-	glBindVertexArray(monsterVAO1);
+	glBindVertexArray(VAOs[0]);
 
-	glBindBuffer(GL_ARRAY_BUFFER, monsterVBO1);
+	glBindBuffer(GL_ARRAY_BUFFER, VBOs[0]);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(enemy1Vertices), enemy1Vertices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, monsterEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(enemyIndices), enemyIndices, GL_STATIC_DRAW);
@@ -138,6 +155,7 @@ int main() {
 	glEnableVertexAttribArray(2);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
 	unsigned int monsterTex1;
 	glGenTextures(1, &monsterTex1);
@@ -160,7 +178,8 @@ int main() {
 		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
-	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 // Shaders
 	Shader healthBarShader("3.3.healthbarshader.vs", "3.3.healthbarshader.fs");
@@ -210,10 +229,24 @@ int main() {
 		
 		//render enemies
 		//glActiveTexture(GL_TEXTURE0);
+		
 		glBindTexture(GL_TEXTURE_2D, monsterTex1);
 		starmanShader.use();
-		glBindVertexArray(monsterVAO1);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		Hero* CurrMobPtr = *(engine.get_currMobs_head() + 1);
+
+		//this thing now works lol!
+		for (int i = 0; i < 3; i++)
+		{
+			if (CurrMobPtr != nullptr)
+			{
+				glBindVertexArray(VAOs[0]);
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			}
+			CurrMobPtr++;
+		}
+
+
+		
 
 
 		// glfw
@@ -226,6 +259,8 @@ int main() {
 	glfwTerminate();
 	return 0;
 }
+//end main - real code begins here
+//--------------------------------
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
 	glViewport(0, 0, width, height);
@@ -243,11 +278,24 @@ void processInput(GLFWwindow *window) {
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+	static Hero* currUserSelectEnemy;
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
 		takeDamage();
 	}
 
+	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && (player.get_myTurn() == true))
+	{
+		//need shader to periodically make the currently "selected" enemy glow over time.
+		//selection should occur as follows: default as the middle 
+
+		
+	}
+
+	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && (player.get_myTurn() == true))
+	{
+		
+	}
 
 
 }
@@ -263,24 +311,58 @@ void gameStateCallBack(GLFWwindow* window) {
 	}
 
 	if (engine.getGameState() == NEW_COMBAT) {
-		for (int i = 0; i < engine.rollNumEnemies(); i++) {
-			//enemies.push_back;
-		}
+		std::cout << "Game state is now NEW COMBAT" << std::endl;
 
+		/*static Enemy en1;
+		Hero* enemyP;*/
+
+		Hero* p = *(engine.get_currMobs_head() + 1);
+		for (int i = 0; i < engine.rollNumEnemies(); i++) {
+			//instead of pushing back enemies, we're gonna push back a pointer to an enemy
+			//p = new Enemy;
+			//*p = en1;
+		}
+		player.set_myTurn(true);
 		// roll textures for enemies
 		engine.setGameState(IN_COMBAT);
 	}
 	else if (engine.getGameState() == IN_COMBAT) {
+		std::cout << "Game state is now IN COMBAT" << std::endl;
 
+		// bulk of turn based booleans will be controlled here.
 		// roll enemy action
+
+		//i = enemies.begin();
+		//if ()
+		
+
 	}
 	else if (engine.getGameState() == WON_COMBAT) {
+		std::cout << "Game state is now WON COMBAT" << std::endl;
+
 		// won combat - get rid of the enemy stuff - delete pointer to new etc
 		// play animation?
 
 	}
 	else if (engine.getGameState() == DEAD) {
+		std::cout << "Game state is now DEAD" << std::endl;
+
 		//you died
 		glfwSetWindowShouldClose(window, true);
 	}
 }
+
+
+
+//have a container with all the currently alive hero objects. maybe a pointer to hero obejct for polymorphism
+//then CAN uhh do shit
+//loop through the container and use it to select target for attack. Pass in the target to attack function as well.
+//player always first in container 
+//This can also be used to determine whose turn it is. Literally loop through and enemy attacks based off where a pointer is or something
+
+
+
+//have to figure out multiple rendering.
+//think i can use the same container from earlier!!!
+
+//for right now only 3 enemies max... sad! and lame. but if not i will literally never finish this.

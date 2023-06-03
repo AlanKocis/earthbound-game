@@ -1,9 +1,10 @@
 #pragma once
+#include "Hero.h"
 class GameEngine
 {
 private:
+	Hero* currMobs[4];
 	int gameState;
-	int combatTurn;
 	bool firstEncounter;
 
 public:
@@ -11,6 +12,7 @@ public:
 	int getGameState();
 	void setGameState(int n);
 	int rollNumEnemies();
+	Hero** get_currMobs_head();
 
 };
 
