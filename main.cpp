@@ -284,18 +284,25 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		takeDamage();
 	}
 
-	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && (player.get_myTurn() == true))
-	{
-		//need shader to periodically make the currently "selected" enemy glow over time.
-		//selection should occur as follows: default as the middle 
 
-		
+	if (player.get_myTurn() == true)
+	{
+		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+		{
+			//need shader to periodically make the currently "selected" enemy glow over time.
+			//selection should occur as follows: default as the middle 
+
+
+
+		}
+
+		if (key == GLFW_KEY_LEFT && action == GLFW_PRESS)
+		{
+
+		}
 	}
 
-	if (key == GLFW_KEY_LEFT && action == GLFW_PRESS && (player.get_myTurn() == true))
-	{
-		
-	}
+
 
 
 }
@@ -329,7 +336,11 @@ void gameStateCallBack(GLFWwindow* window) {
 	else if (engine.getGameState() == IN_COMBAT) {
 		std::cout << "Game state is now IN COMBAT" << std::endl;
 
-		// bulk of turn based booleans will be controlled here.
+
+		
+
+
+		// turns will be calculated here
 		// roll enemy action
 
 		//i = enemies.begin();
@@ -366,3 +377,10 @@ void gameStateCallBack(GLFWwindow* window) {
 //think i can use the same container from earlier!!!
 
 //for right now only 3 enemies max... sad! and lame. but if not i will literally never finish this.
+
+
+
+void playerTurnControl()
+{
+
+}
