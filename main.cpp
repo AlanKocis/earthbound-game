@@ -1,7 +1,6 @@
 #include "renderer.h" // holds glad
 #include <GLFW/glfw3.h>
 
-
 #include "Shader.h"
 #include "Hero.h"
 #include "GameEngine.h"
@@ -9,7 +8,7 @@
 
 #include "stb_image.h"
 #include <cmath>
-#include <vector>
+#include <vector>s
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -18,6 +17,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void processInput(GLFWwindow* window);
 void takeDamage();
 void gameStateCallBack(GLFWwindow* window);
+void freeEnemyArray();
 
 GameEngine engine;
 Hero player(25, 25);
@@ -34,7 +34,7 @@ bool menuIsOpen;
 
 int main() {
 
-	*(engine.get_currMobs_head() + 1) = &player;
+	*(engine.get_currMobs_head() + 0) = &player;
 
 	engine.setGameState(NEW_COMBAT);
 
@@ -323,11 +323,12 @@ void gameStateCallBack(GLFWwindow* window) {
 		/*static Enemy en1;
 		Hero* enemyP;*/
 
+		freeEnemyArray();
+
 		Hero* p = *(engine.get_currMobs_head() + 1);
 		for (int i = 0; i < engine.rollNumEnemies(); i++) {
 			//instead of pushing back enemies, we're gonna push back a pointer to an enemy
 			//p = new Enemy;
-			//*p = en1;
 		}
 		player.set_myTurn(true);
 		// roll textures for enemies
@@ -379,8 +380,30 @@ void gameStateCallBack(GLFWwindow* window) {
 //for right now only 3 enemies max... sad! and lame. but if not i will literally never finish this.
 
 
+void freeEnemyArray()
+{
+	Hero** p = engine.get_currMobs_head();
+	for (int i = 0; i < 3; i++)
+	{
+		if (p[i] != nullptr)
+		{
+			delete p[i];
+		}
+	}
+
+}
 
 void playerTurnControl()
 {
 
 }
+
+
+
+
+
+
+
+
+
+
