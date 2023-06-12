@@ -323,7 +323,7 @@ void gameStateCallBack(GLFWwindow* window) {
 		/*static Enemy en1;
 		Hero* enemyP;*/
 
-		freeEnemyArray();
+		//freeEnemyArray();
 
 		Hero* p = *(engine.get_currMobs_head() + 1);
 		for (int i = 0; i < engine.rollNumEnemies(); i++) {
@@ -383,7 +383,7 @@ void gameStateCallBack(GLFWwindow* window) {
 void freeEnemyArray()
 {
 	Hero** p = engine.get_currMobs_head();
-	for (int i = 0; i < 3; i++)
+	for (int i = 1; i < 4; i++)		// make SURE it doesn't delete [0] - thats the player.
 	{
 		if (p[i] != nullptr)
 		{
