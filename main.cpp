@@ -18,6 +18,7 @@ void processInput(GLFWwindow* window);
 void takeDamage();
 void gameStateCallBack(GLFWwindow* window);
 void freeEnemyArray();
+void delay5sec();
 
 GameEngine engine;
 Hero player(25, 25);
@@ -282,6 +283,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	if (key == GLFW_KEY_SPACE && action == GLFW_PRESS)
 	{
 		takeDamage();
+		delay5sec();
+		
 	}
 
 
@@ -393,17 +396,12 @@ void freeEnemyArray()
 
 }
 
-void playerTurnControl()
+void delay5sec()
 {
+	double t = glfwGetTime();
+	for (int i = t; i < (t + 10000); i++)
+	{
+		std::cout << "Paused" << std::endl;
+	}
 
 }
-
-
-
-
-
-
-
-
-
-
