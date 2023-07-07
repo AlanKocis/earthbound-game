@@ -3,6 +3,7 @@
 class Enemy : public Hero
 {
 public:
-	Enemy();
-
+	Enemy(int level);
+private:
+	static int ID;
 };

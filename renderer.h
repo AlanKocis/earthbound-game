@@ -1,1 +1,2 @@
-#include <glad/glad.h>
+#pragma once
+#include "glad/glad.h"

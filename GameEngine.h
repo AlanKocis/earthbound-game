@@ -1,18 +1,15 @@
 #pragma once
 #include "Hero.h"
+#include <vector>
+
 class GameEngine
 {
-private:
-	Hero* currMobs[4];
-	int gameState;
-	bool firstEncounter;
-
+protected:
+	std::vector<Hero*> turnContainer;
+	int stage;
 public:
 	GameEngine();
-	int getGameState();
-	void setGameState(int n);
-	int rollNumEnemies();
-	Hero** get_currMobs_head();
+	virtual ~GameEngine();
+	inline std::vector<Hero*> getContainer() { return turnContainer; }
 
 };
-
