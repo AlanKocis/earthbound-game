@@ -4,6 +4,7 @@ int Enemy::ID = 0;
 
 Enemy::Enemy(int level)
 {
+	this->targeted = false;
 	++ID;
 	this->ID = ID;
 	this->level = level;

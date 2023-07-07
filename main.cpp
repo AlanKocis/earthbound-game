@@ -8,14 +8,16 @@
 #include "stb_image.h"
 #include <cmath>
 #include <vector>
-
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 void processInput(GLFWwindow* window);
 void gameStateCallBack(GLFWwindow* window);
-
+std::vector<glm::mat4> get_enemy_transforms();
 
 //-------------------------------------------------------------------------------------------------------------
 	// global vars
@@ -88,8 +90,13 @@ int main() {
 
 		
 
-
-
+		// render loop
+		auto i = engine.getContainer().begin() + 1;
+		while (i != engine.getContainer().end())
+		{
+			//render each one with appropriate transformation matrix.
+			// call get_enemy_transforms to return vector with appropriate transformation mat4 for each enemy.
+		}
 
 
 		
@@ -120,22 +127,46 @@ void processInput(GLFWwindow *window) {
 
 }
 
+//player can never be targeted here, watch out for that if it bugs out
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	static auto target = engine.getContainer().begin();
+	static auto target = engine.getContainer().begin() + 1;
 	
 	if ((*it)->get_myTurn() == true)
 	{
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE)
 		{
+			if (target > engine.getContainer().begin() + 1)	//+ 1 because first is player - cant be targeted
+			{
+				(*it)->targeted = false;
+				it--;
+				(*it)->targeted = true;
+				
+			}
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE)
+		{
+			if (target < engine.getContainer().end() - 1) //-1 because .end() is past the final element - points to nothing.
+			{
+				(*it)->targeted = false;
+				it++;
+				(*it)->targeted = true;
+			}
+		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+		{
 
 		}
+
 	}
 
 
 }
 
-void gameStateCallBack(GLFWwindow* window) {
+void gameStateCallBack(GLFWwindow* window)
+{
 	it = engine.getContainer().begin();
 	// do a while(it->get_myTurn() == true) for the player to control, the hit method sets turn to false after
 
@@ -143,3 +174,12 @@ void gameStateCallBack(GLFWwindow* window) {
 
 }
 
+std::vector<glm::mat4> get_enemy_transforms()
+{
+	std::vector<glm::mat4> transforms;
+
+	int enemy_count = engine.getContainer().size() - 1;		// - 1 to account for player in container
+
+	return transforms;
+
+}

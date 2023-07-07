@@ -13,8 +13,8 @@ protected:
 	int level;
 	bool myTurn;
 
-
 public:
+	bool targeted;
 	virtual void attack(Hero* target) = 0;
 	virtual void take_dmg(int hit) = 0;
 	bool get_myTurn() const;
