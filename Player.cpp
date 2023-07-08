@@ -16,8 +16,13 @@ void Player::attack(Hero* target)
 {
 	int hit = (1 * level) + 1;
 	target->take_dmg(hit);
-	this->myTurn = false;
 	std::cout << name << " attacks for " << hit << std::endl;
+	if (target->get_health() <= 0)
+	{
+		this->xp += 10;
+		std::cout << name << " killed " << target->get_name() << " and gained some xp" << std::endl;
+	}
+	myTurn = false;
 }
 
 void Player::take_dmg(int hit)

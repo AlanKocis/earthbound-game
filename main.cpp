@@ -18,6 +18,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void processInput(GLFWwindow* window);
 void gameStateCallBack(GLFWwindow* window);
 std::vector<glm::mat4> get_enemy_transforms();
+void enemy_attack();
+void delay_5s();
 
 //-------------------------------------------------------------------------------------------------------------
 	// global vars
@@ -156,6 +158,7 @@ int main() {
 		//render enemies
 		std::vector<glm::mat4> transforms = get_enemy_transforms();
 		int t_i{};
+		float red_amount;
 		while (i != engine.getContainer().end())
 		{
 
@@ -169,13 +172,24 @@ int main() {
 			en_shader.use();
 
 			//do sin thing for targeted enemy
+			if ((*i)->targeted)
+			{
+				red_amount = static_cast<float>(-1.0 * abs(sin(5 * glfwGetTime())));
+			}
+			else
+			{
+				red_amount = 0.0;
+			}
 			float red_amount = static_cast<float>(-1.0 * abs(sin(5 * glfwGetTime())));
 			en_shader.setFloat("targeted", red_amount);
 			//set transformation matrices
 			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));
 			glBindVertexArray(en_VAO);
 			if ((*i)->get_health() > 0)
-			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+			{
+				glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+			}
 
 
 
@@ -219,9 +233,9 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		target_it = engine.getContainer().begin() + 1;
 	}
 
-	if ((*turn_it)->get_myTurn() == true)
+	if ((engine.getContainer()[0])->get_myTurn() == true)
 	{
-		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE)
+		if ((key == GLFW_KEY_LEFT && action == GLFW_RELEASE) && (engine.get_stage() != 1))
 		{
 			if (target_it > engine.getContainer().begin() + 1)	//+ 1 because first is player - cant be targeted
 			{
@@ -232,7 +246,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			}
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_RELEASE && engine.get_stage() != 1)
+		if ((key == GLFW_KEY_RIGHT && action == GLFW_RELEASE) && (engine.get_stage() != 1))
 		{
 			if (target_it < engine.getContainer().end() - 1) //-1 because .end() is past the final element - points to nothing.
 			{
@@ -242,7 +256,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 			}
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
+		if (key == GLFW_KEY_SPACE && action == GLFW_RELEASE)
 		{
 			// call attack() with the parameter as *it - this part is scary
 			engine.getContainer()[0]->attack(*target_it);
@@ -251,38 +265,49 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 		
 	}
-
-
 }
 
 void gameStateCallBack(GLFWwindow* window)
 {
-	if (engine.get_stage() == 0)	// stage gets ++d when initialize_stage is called
+	if (engine.get_stage() == 0)	// stage gets ++d when initialize_stage is called -- first time launch
 	{
 		engine.initiate_stage(1);
 		turnBuffer = 1;
 		turn_it = engine.getContainer().begin();
+		(*turn_it)->set_myTurn(true);
 	}
 	else
 	{
-		if (engine.get_stage() < turnBuffer)		//turn buffer needs to be incremented after everything is dead and xp has been gained. 
-		{											// i think for now it might work with just 1 turn? We'll see. Need to fix later.
+		if (engine.get_stage() < turnBuffer)		//  turn buffer needs to be incremented after everything is 
+		{											//  dead and xp has been gained. also call engine.next_stage(). 
+
 			engine.initiate_stage(engine.get_stage());
 		}
 	}
 
 
 
+	//using turn_it to control whose turn it is
+
+	if (turn_it == engine.getContainer().begin())
+	{
+		if ((*turn_it)->get_myTurn() == false) { turn_it++; }	// myTurn is set to false in the attack method
+
+	}
+	else
+	{
+		//if not the player, need to call some enemy_attack() function with delay
+		enemy_attack();
+		(*turn_it)->set_myTurn(false);
+		turn_it++;
+	}
 
 
 
-	// it is what I want to control the turns.
-	int max_turn = engine.getContainer().size();
-	(*turn_it)->set_myTurn(true);
-	if ((*turn_it)->get_myTurn() == false) { it++; }	//set turn to the next thing in stage container
 	if (turn_it == engine.getContainer().end())
 	{
 		turn_it = engine.getContainer().begin();
+		(*turn_it)->set_myTurn(true);
 		turnBuffer++;
 	}
 }
@@ -323,4 +348,24 @@ std::vector<glm::mat4> get_enemy_transforms()
 	//i love c plusplus
 	return transforms;
 
+}
+
+void enemy_attack()
+{
+	std::cout << "Turn has changed" << std::endl;
+	(*turn_it)->attack(engine.getContainer()[0]);
+	delay_5s();
+
+}
+
+void delay_5s()
+{
+	float currTime = glfwGetTime();
+	float max = currTime = 10;
+	while (currTime < max)
+	{
+		std::cout << "delay";
+		++max;
+	}
+	std::cout << std::endl;
 }
