@@ -17,6 +17,7 @@ public:
 	bool targeted;
 	virtual void attack(Hero* target) = 0;
 	virtual void take_dmg(int hit) = 0;
+	const int& get_health() { return health; }
 	bool get_myTurn() const;
 	void set_myTurn(bool turn);
 	virtual ~Hero() {}

@@ -35,7 +35,7 @@ void GameEngine::initiate_stage(int stage)
 
 GameEngine::GameEngine()
 {
-	turnContainer.reserve(4);
+	turnContainer.reserve(4);		//EXTREMELY IMPORTANT -- std::iterators become useless after push_back() unless you reserve memory first.
 	Hero* playerPtr = new Player;
 	turnContainer.push_back(playerPtr);
 }

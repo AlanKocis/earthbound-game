@@ -13,7 +13,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void key_callback(GLFWwindow*);
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 void processInput(GLFWwindow* window);
 void gameStateCallBack(GLFWwindow* window);
@@ -61,6 +61,7 @@ int main() {
 	// callbacks
 
 	glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+	glfwSetKeyCallback(window, key_callback);
 
 //-------------------------------------------------------------------------------------------------------------
 //to-dos
@@ -95,6 +96,7 @@ int main() {
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 //-------------------------------------------------------------------------------------------------------------
 //texture
@@ -110,6 +112,8 @@ int main() {
 
 	int width, height, num_channels;
 	stbi_set_flip_vertically_on_load(true);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	unsigned char* data = stbi_load("starman.png", &width, &height, &num_channels, 0);
 	if (data)
 	{
@@ -118,7 +122,7 @@ int main() {
 	}
 	else
 	{
-		std::cout << "Failed to laod texture" << std::endl;
+		std::cout << "Failed to load texture" << std::endl;
 	}
 	stbi_image_free(data);
 
@@ -131,7 +135,7 @@ int main() {
 	en_shader.use();
 	unsigned int target_uniform_location = glGetUniformLocation(en_shader.ID, "targeted");
 	glUniform1i(target_uniform_location, 0);
-	en_shader.setFloat("targeted", 0.0f);		//should be updated later in render loop with sin function to get red value.
+	en_shader.setFloat("targeted", 0.0);		//should be updated later in render loop with sin function to get red value.
 	en_shader.setInt("ourTexture", 0);
 	unsigned int transform_uniform_location = glGetUniformLocation(en_shader.ID, "transform");
 
@@ -140,7 +144,6 @@ int main() {
 	while (!glfwWindowShouldClose(window)) {
 		// process input
 		processInput(window);
-		key_callback(window);
 
 		//check turn state
 		gameStateCallBack(window);
@@ -166,11 +169,12 @@ int main() {
 			en_shader.use();
 
 			//do sin thing for targeted enemy
-			float red_amount = static_cast<float>(sin(glfwGetTime()));
+			float red_amount = static_cast<float>(-1.0 * abs(sin(5 * glfwGetTime())));
 			en_shader.setFloat("targeted", red_amount);
 			//set transformation matrices
 			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));
 			glBindVertexArray(en_VAO);
+			if ((*i)->get_health() > 0)
 			glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
 
@@ -208,10 +212,14 @@ void processInput(GLFWwindow *window) {
 }
 
 //player can never be targeted here, watch out for that if it bugs out
-void key_callback(GLFWwindow* window)
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	
-	if ((*target_it)->get_myTurn() == true)
+	if (engine.get_stage() == 1)
+	{
+		target_it = engine.getContainer().begin() + 1;
+	}
+
+	if ((*turn_it)->get_myTurn() == true)
 	{
 		if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_RELEASE)
 		{
@@ -234,10 +242,10 @@ void key_callback(GLFWwindow* window)
 			}
 		}
 
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE && engine.get_stage() != 1)
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_RELEASE)
 		{
 			// call attack() with the parameter as *it - this part is scary
-			engine.getContainer()[0]->attack(*it);
+			engine.getContainer()[0]->attack(*target_it);
 
 		}
 
