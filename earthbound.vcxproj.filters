@@ -78,7 +78,7 @@
   <ItemGroup>
     <None Include="3.3.healthbarshader.fs" />
     <None Include="3.3.healthbarshader.vs" />
-    <None Include="3.3.enemy1shader.fs" />
-    <None Include="3.3.enemy1shader.vs" />
+    <None Include="3.3.en_vertex_shader.glsl" />
+    <None Include="3.3.en_fragment_shader.glsl" />
   </ItemGroup>
 </Project>

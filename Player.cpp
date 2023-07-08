@@ -1,4 +1,5 @@
 #include "Player.h"
+#include <iostream>
 
 Player::Player()
 {
@@ -16,6 +17,7 @@ void Player::attack(Hero* target)
 	int hit = (1 * level) + 1;
 	target->take_dmg(hit);
 	this->myTurn = false;
+	std::cout << name << " attacks for " << hit << std::endl;
 }
 
 void Player::take_dmg(int hit)
