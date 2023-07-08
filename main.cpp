@@ -8,6 +8,7 @@
 #include "stb_image.h"
 #include <cmath>
 #include <vector>
+#include <Windows.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -21,6 +22,9 @@ std::vector<glm::mat4> get_enemy_transforms();
 void enemy_attack();
 void delay_5s();
 
+const int FPS = 30;
+#define FRAME_TARGET_TIME (1000 / FPS)
+
 //-------------------------------------------------------------------------------------------------------------
 	// global vars
 GameEngine engine;
@@ -29,6 +33,7 @@ auto turn_it = engine.getContainer().begin();
 	// player object is in engine::turnContainer[0] now.
 auto target_it = engine.getContainer().begin();
 int turnBuffer;
+int last_frame_time = 0;
 
 //-------------------------------------------------------------------------------------------------------------
 
@@ -223,6 +228,15 @@ void processInput(GLFWwindow *window) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 		glfwSetWindowShouldClose(window, true);
 	}
+
+
+	int time_to_wait = (1000 / FPS) - glfwGetTime() - last_frame_time;
+	if (time_to_wait > 0 && time_to_wait <= (1000 / FPS))
+	{
+		Sleep(time_to_wait);
+	}
+
+
 }
 
 //player can never be targeted here, watch out for that if it bugs out
