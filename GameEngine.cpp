@@ -4,8 +4,6 @@
 
 void GameEngine::initiate_stage(int stage)
 {
-	this->stage += 1;
-
 	if (stage != 1)
 	{
 		auto it = turnContainer.begin() + 1; // pls dont delete player object so + 1

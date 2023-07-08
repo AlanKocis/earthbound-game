@@ -21,6 +21,7 @@ void gameStateCallBack(GLFWwindow* window);
 std::vector<glm::mat4> get_enemy_transforms();
 void enemy_attack();
 void delay_5s();
+bool enemies_all_dead();
 
 const int FPS = 30;
 #define FRAME_TARGET_TIME (1000 / FPS)
@@ -286,6 +287,7 @@ void gameStateCallBack(GLFWwindow* window)
 	if (engine.get_stage() == 0)	// stage gets ++d when initialize_stage is called -- first time launch
 	{
 		engine.initiate_stage(1);
+		engine.next_stage();
 		turnBuffer = 1;
 		turn_it = engine.getContainer().begin();
 		(*turn_it)->set_myTurn(true);
@@ -294,8 +296,8 @@ void gameStateCallBack(GLFWwindow* window)
 	{
 		if (engine.get_stage() < turnBuffer)		//  turn buffer needs to be incremented after everything is 
 		{											//  dead and xp has been gained. also call engine.next_stage(). 
-
-			engine.initiate_stage(engine.get_stage());
+			engine.next_stage();
+			engine.initiate_stage(turnBuffer);
 		}
 	}
 
@@ -322,7 +324,13 @@ void gameStateCallBack(GLFWwindow* window)
 	{
 		turn_it = engine.getContainer().begin();
 		(*turn_it)->set_myTurn(true);
-		turnBuffer++;
+
+		//if (//enemies are dead)
+			//turnBuffer++;
+		if (enemies_all_dead())
+		{
+			turnBuffer++;
+		}
 	}
 }
 
@@ -367,19 +375,37 @@ std::vector<glm::mat4> get_enemy_transforms()
 void enemy_attack()
 {
 	std::cout << "Turn has changed" << std::endl;
-	(*turn_it)->attack(engine.getContainer()[0]);
 	delay_5s();
+
+	(*turn_it)->attack(engine.getContainer()[0]);
 
 }
 
 void delay_5s()
 {
-	float currTime = glfwGetTime();
-	float max = currTime = 10;
-	while (currTime < max)
+	Sleep(700);
+}
+
+bool enemies_all_dead()
+{
+	std::cout << "Enemies all dead called - ";
+	bool all_dead = true;
+	auto it = engine.getContainer().begin();
+
+	if (engine.getContainer().size() > 1)
 	{
-		std::cout << "delay";
-		++max;
+		it++; //skip player object
+		while (it != engine.getContainer().end())
+		{
+			if ((*it)->get_health() > 0)
+			{
+				all_dead = false;
+				std::cout << "returned false" << std::endl;
+			}
+			it++;
+
+		}
 	}
-	std::cout << std::endl;
+
+	return all_dead;
 }
