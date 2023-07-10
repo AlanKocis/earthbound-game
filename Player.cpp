@@ -17,7 +17,7 @@ void Player::attack(Hero* target)
 {
 	int hit = (1 * level) + 1;
 	target->take_dmg(hit);
-	std::cout << name << " attacks for " << hit << std::endl;
+	std::cout << name << " attacks " << target << " for " << hit << std::endl;
 	if (target->get_health() <= 0)
 	{
 		this->xp += 10;

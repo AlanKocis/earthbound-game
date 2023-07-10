@@ -188,7 +188,6 @@ int main() {
 			{
 				red_amount = 0.0;
 			}
-			float red_amount = static_cast<float>(-1.0 * abs(sin(5 * glfwGetTime())));
 			en_shader.setFloat("targeted", red_amount);
 			//set transformation matrices
 			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));		//i think problem might be here
@@ -254,10 +253,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	{
 		if ((key == GLFW_KEY_LEFT && action == GLFW_RELEASE) && (engine.get_stage() != 1))		//broken lul
 		{
-			if (target_it > engine.getContainer().begin() + 2)	//+ 1 because first is player - cant be targeted
+			if (target_it > engine.getContainer().begin() + 1)	//+ 1 because first is player - cant be targeted
 			{
+				std::cout << "left key" << std::endl;
 				(*target_it)->targeted = false;
-				it--;
+				target_it--;
 				(*target_it)->targeted = true;
 				
 			}
@@ -267,6 +267,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		{
 			if (target_it < engine.getContainer().end() - 1) //-1 because .end() is past the final element - points to nothing.
 			{
+				std::cout << "right key" <<std::endl;
 				(*target_it)->targeted = false;
 				target_it++;
 				(*target_it)->targeted = true;
@@ -392,7 +393,6 @@ void delay_5s()
 
 bool enemies_all_dead()
 {
-	std::cout << "Enemies all dead called - ";
 	bool all_dead = true;
 	auto it = engine.getContainer().begin();
 
@@ -404,7 +404,7 @@ bool enemies_all_dead()
 			if ((*it)->get_health() > 0)
 			{
 				all_dead = false;
-				std::cout << "returned false" << std::endl;
+				std::cout << "some enemy still alive this turn" << std::endl;
 			}
 			it++;
 
