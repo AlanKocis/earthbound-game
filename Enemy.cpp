@@ -25,6 +25,6 @@ void Enemy::attack(Hero* target)
 	int hit = 1 * level;
 	target->take_dmg(hit);
 	myTurn = false;
-	std::cout << name << " attacks for " << hit << std::endl;
+	std::cout << name << ' ' << this << " attacks for " << hit << std::endl;
 
 }

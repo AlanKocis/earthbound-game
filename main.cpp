@@ -301,6 +301,7 @@ void gameStateCallBack(GLFWwindow* window)
 			engine.next_stage();
 			engine.initiate_stage(turnBuffer);
 			turn_it = engine.getContainer().begin();
+			target_it = engine.getContainer().begin() + 1;
 		}
 	}
 
@@ -316,7 +317,7 @@ void gameStateCallBack(GLFWwindow* window)
 	else
 	{
 		//if not the player, need to call some enemy_attack() function with delay
-		enemy_attack();
+		if ((*turn_it)->get_health() > 0) { enemy_attack(); }
 		(*turn_it)->set_myTurn(false);
 		turn_it++;
 	}
