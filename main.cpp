@@ -352,12 +352,14 @@ std::vector<glm::mat4> get_enemy_transforms()
 		glm::mat4 translation = glm::mat4(1.0f);
 		if (enemy_count == 1)
 		{
+			translation = glm::scale(translation, glm::vec3(-0.5, 0.5, 0.0));
 			transforms.push_back(translation);
 		}
 		else if (enemy_count == 2)
 		{
 			translation = glm::translate(translation, glm::vec3(-0.35 * negative_switch, 0.0, 0.0));
 			negative_switch *= -1;
+			translation = glm::scale(translation, glm::vec3(-0.5, 0.5, 0.0));
 			transforms.push_back(translation);
 		}
 		else if (enemy_count == 3)
