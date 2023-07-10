@@ -12,6 +12,7 @@ Enemy::Enemy(int level)
 	this->name = "Enemy";
 	this->health = 10 + (2 * level);
 	this->max_health = 10 + (2 * level);
+	this->targeted = false;
 }
 
 void Enemy::take_dmg(int hit)

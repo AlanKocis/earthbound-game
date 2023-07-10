@@ -22,9 +22,11 @@ std::vector<glm::mat4> get_enemy_transforms();
 void enemy_attack();
 void delay_5s();
 bool enemies_all_dead();
+bool is_player_turn();
 
 const int FPS = 30;
 #define FRAME_TARGET_TIME (1000 / FPS)
+
 
 //-------------------------------------------------------------------------------------------------------------
 	// global vars
@@ -178,7 +180,7 @@ int main() {
 			en_shader.use();
 
 			//do sin thing for targeted enemy
-			if ((*i)->targeted)
+			if ((*i)->targeted == true)
 			{
 				red_amount = static_cast<float>(-1.0 * abs(sin(5 * glfwGetTime())));
 			}
@@ -189,7 +191,7 @@ int main() {
 			float red_amount = static_cast<float>(-1.0 * abs(sin(5 * glfwGetTime())));
 			en_shader.setFloat("targeted", red_amount);
 			//set transformation matrices
-			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));
+			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));		//i think problem might be here
 			glBindVertexArray(en_VAO);
 			if ((*i)->get_health() > 0)
 			{
@@ -248,11 +250,11 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		target_it = engine.getContainer().begin() + 1;
 	}
 
-	if ((engine.getContainer()[0])->get_myTurn() == true)
+	if ((engine.getContainer().at(0))->get_myTurn() == true)
 	{
-		if ((key == GLFW_KEY_LEFT && action == GLFW_RELEASE) && (engine.get_stage() != 1))
+		if ((key == GLFW_KEY_LEFT && action == GLFW_RELEASE) && (engine.get_stage() != 1))		//broken lul
 		{
-			if (target_it > engine.getContainer().begin() + 1)	//+ 1 because first is player - cant be targeted
+			if (target_it > engine.getContainer().begin() + 2)	//+ 1 because first is player - cant be targeted
 			{
 				(*target_it)->targeted = false;
 				it--;
@@ -298,6 +300,7 @@ void gameStateCallBack(GLFWwindow* window)
 		{											//  dead and xp has been gained. also call engine.next_stage(). 
 			engine.next_stage();
 			engine.initiate_stage(turnBuffer);
+			turn_it = engine.getContainer().begin();
 		}
 	}
 
@@ -408,4 +411,9 @@ bool enemies_all_dead()
 	}
 
 	return all_dead;
+}
+
+bool is_player_turn()
+{
+	return (engine.getContainer().at(0))->get_myTurn();
 }

@@ -12,20 +12,27 @@ void GameEngine::initiate_stage(int stage)
 			delete (*it);
 			it++;
 		}
+
+		it = turnContainer.begin() + 1;
+		while (turnContainer.size() >= 2)
+		{
+			turnContainer.pop_back();
+		}
 	}
 
 	int numEnemies = 1;
 
-	if (stage > 2) { numEnemies = 2; }
-	if (stage > 4) { numEnemies = 3; }
+	if (stage >= 2) { numEnemies = 2; }
+	if (stage >= 4) { numEnemies = 3; }
 
 
 
-	Hero* p_array[3];
+	Hero* p_array[3]{};
 
 	for (int i = 0; i < numEnemies; i++)
 	{
 		p_array[i] = new Enemy(i + 1);	// i + 1 will be enemy level - starts at 1 goes to 4 possible
+		p_array[i]->take_dmg(10);	//testing phase change
 		turnContainer.push_back(p_array[i]);	// OK -- numEnemies only possible to go to 3,  i only goes to 2
 	}
 

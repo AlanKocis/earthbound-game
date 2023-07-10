@@ -10,6 +10,7 @@ Player::Player()
 	this->max_xp = 10;
 	this->level = 1; 
 	this->myTurn = false;
+	this->targeted = false;
 }
 
 void Player::attack(Hero* target)
