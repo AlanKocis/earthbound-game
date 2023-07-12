@@ -150,8 +150,7 @@ int main() {
 	unsigned int transform_uniform_location = glGetUniformLocation(en_shader.ID, "transform");
 
 //-------------------------------------------------------------------------------------------------------------
-// Render loop
-	while (!glfwWindowShouldClose(window)) {
+ 	while (!glfwWindowShouldClose(window)) {
 		// process input
 		processInput(window);
 
@@ -300,6 +299,7 @@ void gameStateCallBack(GLFWwindow* window)
 		if (engine.get_stage() < turnBuffer)		//  turn buffer needs to be incremented after everything is 
 		{											//  dead and xp has been gained. also call engine.next_stage(). 
 			engine.next_stage();
+			std::cout << "New stage (stage " << engine.get_stage() << ") initialized." << std::endl;
 			engine.initiate_stage(turnBuffer);
 			turn_it = engine.getContainer().begin();
 			target_it = engine.getContainer().begin() + 1;
