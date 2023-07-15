@@ -189,7 +189,7 @@ int main() {
 			}
 			en_shader.setFloat("targeted", red_amount);
 			//set transformation matrices
-			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));		//i think problem might be here
+			glUniformMatrix4fv(transform_uniform_location, 1, GL_FALSE, glm::value_ptr(transforms.at(t_i)));
 			glBindVertexArray(en_VAO);
 			if ((*i)->get_health() > 0)
 			{

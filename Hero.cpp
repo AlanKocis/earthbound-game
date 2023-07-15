@@ -9,3 +9,8 @@ void Hero::set_myTurn(bool turn)
 {
     this->myTurn = turn;
 }
+
+Hero::Hero()
+{
+
+}

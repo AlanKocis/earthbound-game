@@ -15,6 +15,7 @@ protected:
 
 public:
 	bool targeted;
+	Hero();
 	virtual void attack(Hero* target) = 0;
 	virtual void take_dmg(int hit) = 0;
 	const int& get_health() { return health; }

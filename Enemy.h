@@ -3,7 +3,7 @@
 class Enemy : public Hero
 {
 public:
-	Enemy(int level);
+	Enemy(int lvl);
 	bool targeted;
 	virtual void take_dmg(int hit) override;
 	virtual void attack(Hero* target) override;
